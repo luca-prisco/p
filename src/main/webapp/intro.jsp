@@ -10,7 +10,17 @@
 	<link rel="stylesheet" href="./css/intro-style.css">
 	<link rel="icon" href="./img/icon.png">
 	
-	<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+	<script>
+        var script = document.createElement('script');
+        script.src = "https://code.jquery.com/jquery-3.2.1.js";
+        
+        if ('integrity' in script && 'crossOrigin' in script) {
+            script.setAttribute('integrity', 'sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=');
+            script.setAttribute('crossorigin', 'anonymous');
+        }
+        
+        document.head.appendChild(script);
+    </script>
 </head>
 <body>
 
