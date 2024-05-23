@@ -121,12 +121,13 @@ public class ProductModel {
 
 		Collection<ProductBean> products = new LinkedList<ProductBean>();
 
-		String selectSQL = "SELECT * FROM " + ProductModel.TABLE_NAME + " WHERE deleted = 'false' AND nomeTipologia = '" + where + "'";
+	    String selectSQL = "SELECT * FROM " + ProductModel.TABLE_NAME + " WHERE deleted = 'false' AND nomeTipologia = ?";	//E' stata modificata questa query
 		String sql2 = "SELECT AVG(votazione) FROM Recensione WHERE codiceProdotto = ?";
 		
 		try {
 			connection = DriverManagerConnectionPool.getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setString(1, where);
 
 			ResultSet rs = preparedStatement.executeQuery();
 
@@ -145,8 +146,7 @@ public class ProductModel {
 				bean.setData(rs.getDate("dataAnnuncio"));
 				bean.setImmagine(rs.getString("model"));
 				
-				connection2 = DriverManagerConnectionPool.getConnection();
-				preparedStatement2 = connection2.prepareStatement(sql2);
+				preparedStatement2 = connection.prepareStatement(sql2);
 				preparedStatement2.setInt(1, codiceProdotto);
 				ResultSet rs2 = preparedStatement2.executeQuery();
 				if (rs2.next()) {
@@ -160,12 +160,11 @@ public class ProductModel {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
+				if (preparedStatement2 != null)
+					preparedStatement2.close();
 			} finally {
 				if (connection2 != null) {
 					DriverManagerConnectionPool.releaseConnection(connection2);
-				}
-				if (connection != null) {
-					DriverManagerConnectionPool.releaseConnection(connection);
 				}
 			}
 		}
